@@ -1,0 +1,33 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      java: corretto21
+    commands:
+      - echo "Installation des dependances terminee"
+      - ./gradlew --version
+
+  pre_build:
+    commands:
+      - echo "Préparation de l'environnement de build"
+      - chmod +x gradlew
+      - ./gradlew clean
+
+  build:
+    commands:
+      - echo "Phase de Build et de test"
+      - ./gradlew build
+      - echo "Generation du rapport"
+      - ./gradlew test > rapport.txt || true 
+
+  post_build:
+    commands:
+      - echo "Build completed successfully."
+      - cat rapport.txt || echo "PAS DE RAPPORT GENERE"
+
+artifacts:
+  files:
+    - build/libs/**/*.jar
+    - rapport.txt
+  discard-paths: yes
